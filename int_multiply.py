@@ -1,38 +1,41 @@
-import numpy as np
-# Karastuba Multiplication
+from math import ceil, floor
+# Karatsuba Multiplication
 
 
-def karastuba(a, b):
+def karatsuba(x, y):
 
-    if len(a) == 1 == len(b):
-        print('returning', a, b)
-        return a[0] * b[0]
+    if x < 10 and y < 10:
+        return x * y
 
-    n = len(max(a, b))
-    n2 = int(n / 2)
-    h1 = a[0:int(len(a)/2)]
-    l1 = a[int(len(a)/2):len(a)]
-    h2 = b[0:int(len(b)/2)]
-    l2 = b[int(len(b)/2):len(b)]
+    n = max(len(str(x)), len(str(y)))
+    n = int(ceil(float(n)/2))
 
-    print(a, b, n, n2)
-    print(h1, l1, h2, l2)
-    print('z0')
-    z0 = karastuba(l1, l2)
-    print('z1')
-    z1 = karastuba((l1+h1), (l2+h2))
-    print('z2')
-    z2 = karastuba(h1, h2)
+    a = int(floor(x / 10**n))
+    b = int(x % (10**n))
 
-    return (z2 * 10**(2 * n2)) + ((z1 - z2 - z0) * 10**n2) + z0
+    c = int(floor(y / 10**n))
+    d = int(y % (10**n))
+
+    z1 = karatsuba(a, c)
+    z2 = karatsuba(b, d)
+    z3 = karatsuba(a + b, c + d) - z1 - z2
+
+    return int(z1*(10**(n*2)) + z3*(10**n) + z2)
 
 
 if __name__ == '__main__':
-    # a = [int(x) for x in '3141592653589793238462643383279502884197169399375105820974944592']
-    # b = [int(x) for x in '2718281828459045235360287471352662497757247093699959574966967627']
+    x = 3141592653589793238462643383279502884197169399375105820974944592
+    y = 2718281828459045235360287471352662497757247093699959574966967627
 
-    a = [int(x) for x in '1000']
-    b = [int(x) for x in '5000']
-    c = ''.join(map(str, a))
+    #x = 1234
+    #y = 56788
 
-    print(karastuba(a, b))
+    result = karatsuba(x, y)
+    print('=' * 25)
+    print(result)
+    print(x * y)
+    if result == x * y:
+        print('PASSED')
+    else:
+        print('FAILED')
+
